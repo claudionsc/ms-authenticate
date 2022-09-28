@@ -15,8 +15,7 @@ usersRoute.get('/users/:uuid', async (req: Request<{ uuid: string}>, res: Respon
         const user = await userRepository.findById(uuid)
         res.status(StatusCodes.OK).send(user)
     }catch(error){
-        console.log(error)
-        res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR).send(user)
+        next(error)
     }
 })
 
