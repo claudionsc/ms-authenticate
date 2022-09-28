@@ -5,12 +5,14 @@ db
 
 class UserRepository {
 
-    findAllUsers(): User[] {
-        const sql = `
+    async findAllUsers(): Promise<User[]> {
+        const query = `
             SELECT uuid, username 
             FROM application_user 
         `
-        return [];
+        const result = await db.query<User>(query)
+        const rows = result.rows
+        return rows || [];
     }
     
 }
