@@ -32,7 +32,7 @@ class UserRepository {
 
     async create(user: User): Promise<string> {
         const script = `
-        INSERT INTO aplication_user (
+        INSERT INTO application_user (
             username,
             password
         )
@@ -46,6 +46,35 @@ class UserRepository {
         const [newUser] = rows
         return newUser.uuid
     }
+
+    async update(user: User): Promise<void> {
+        const script = `
+        UPDATE application_user
+        SET
+            username = $1,
+            password = crypt($2, 'senha')
+        WHERE uuid = $3
+        `
+
+        const values = [user.username, user.password, user.uuid]
+
+        await db.query(script, values)
+        
+        
+    }
+
+    async remove(uuid: string): Promise<void> {
+        const script = `
+            DELETE 
+            FROM application_user
+            WHERE uuid = $1
+        `
+
+        const values = [uuid]
+
+        await db.query(script, values)
+    }
+    
 
     
 }
