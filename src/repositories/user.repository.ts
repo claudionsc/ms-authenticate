@@ -26,10 +26,25 @@ class UserRepository {
         const { rows } = await db.query<User>(query, values)
         const [ user ] = rows
 
-        return user
+        return user  
 
-        
+    }
 
+    async create(user: User): Promise<string> {
+        const script = `
+        INSERT INTO aplication_user (
+            username,
+            password
+        )
+        VALUES ($1, crypt($2, 'senha'))
+        RETURNING uuid
+        `
+
+        const values = [user.username, user.password]
+
+        const { rows } = await db.query<{ uuid: string }>(script, values)
+        const [newUser] = rows
+        return newUser.uuid
     }
 
     
